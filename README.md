@@ -2,7 +2,7 @@
 
 **Author:** Carmem Aires (MSc Geomatics - 3D Geoinformation Group — TU Delft)
 
-This repository belongs to the master thesis "Comparison of Wind Velocity Predictions from Wind-Only and Thermally Coupled OpenFOAM Solvers in Urban Models with Complex Terrain" presented at the 3D Geoinformation Group, Delft University of Technology,Faculty of Architecture and the Built Environment.
+This repository belongs to the master thesis "Comparison of Wind Velocity Predictions from Wind-Only and Thermally Coupled OpenFOAM Solvers in Urban Models with Complex Terrain" presented at the 3D Geoinformation Group of the Delft University of Technology - Faculty of Architecture and the Built Environment.
 
 ## Repository Structure
 
@@ -69,7 +69,7 @@ Removes files created by a previous `faceAgglomerate` run, redistributes the new
 
 ## Model Reconstruction 
 
-The `model-reconstruction/` folder contains the configuration file used to reconstruct the model using [City4CFD](https://github.com/tudelft3d/city4cfd).
+The 3D models are provided directly, but if you wish to reconstruct them yourself, the `model-reconstruction/` folder contains the configuration file for [City4CFD](https://github.com/tudelft3d/city4cfd).
 
 ### Input Data
 
@@ -80,5 +80,4 @@ model-reconstruction/
 ├── polygons/    # Building and Vegetation footprints
 └── PC/          # Point clouds
 ```
-
 
