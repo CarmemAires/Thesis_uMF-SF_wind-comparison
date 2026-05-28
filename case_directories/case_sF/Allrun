@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Define number of processors
+nprocs=20
+
+if [[ "$nprocs" == 1 ]]; then
+	echo "Run simpleFoam in sequence ..."
+	simpleFoam > logs/simpleFoam.log 2>&1
+else
+	echo "Run simpleFoam in parallel ..."
+	rm -rf processor*
+	echo "Run decomposePar ..."
+	decomposePar -force > log7.decomposePar_run.log 2>&1
+	echo "Run simpleFoam with MPI ..."
+	mpirun -np $nprocs simpleFoam -parallel > log8.simpleFoam 2>&1
+	echo "Run reconstructPar ..."
+	reconstructPar -latestTime > log9.reconstructPar 2>&1
+fi
+echo "Done with simpleFoam!"

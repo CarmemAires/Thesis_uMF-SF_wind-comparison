@@ -1,0 +1,26 @@
+#!/bin/bash
+
+NP=20
+
+# ----------------------------------------
+# DECOMPOSE FIELDS ONLY WITHOUTH DELETING 
+# FACEAFFLOMERATION AFTER FIELDS CHANGED
+# ----------------------------------------
+echo "decomposing fields terrain..."
+for i in $(seq 0 $((NP-1))); do rm -rf processor$i/0/terrain; done
+decomposePar -region terrain -fields > log.decomposePar_terrain_fields 2>&1
+
+echo "decomposing fields buildings..."
+for i in $(seq 0 $((NP-1))); do rm -rf processor$i/0/buildings; done
+decomposePar -region buildings -fields > log.decomposePar_buildings_fields 2>&1
+
+echo "decomposing fields air..."
+for i in $(seq 0 $((NP-1))); do
+    find processor$i/0/air -type f \
+        ! -name "facesAgglomeration.gz" \
+        ! -name "viewFactorField.gz" \
+        -delete
+done
+
+decomposePar -region air -fields > log.decomposePar_air_fields 2>&1
+echo "decomposing fields completed."

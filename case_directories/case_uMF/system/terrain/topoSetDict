@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+
+   // ---- vegetation ----
+    {
+        name    vegetation_terrain;
+        type    cellSet;
+        action  new;
+        source  surfaceToCell;
+        sourceInfo
+        {
+            file          "constant/triSurface/Mesh_Vegetation.obj";
+            outsidePoints ((-2.10287 -10.1002 296.31));
+            includeCut    false;
+            includeInside false;
+            includeOutside false;
+            nearDistance  1;
+            curvature     -100;
+        }
+    }
+    {
+        name    vegetation_terrain;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+            set    vegetation_terrain;
+        }
+    }
+    
+    // create a new cellSet named soil, identical to the cellSet pavement
+    {
+        name    terrain;
+        type    cellSet;
+        action  new;
+        source  cellToCell;
+        sourceInfo
+        {
+            set vegetation_terrain;
+        }
+    }
+    // invert the selection of cells in the cellSet soil. 
+    // this will select all the remaining cells in the solid region mesh
+    {
+        name    terrain;
+        type    cellSet;
+        action  invert;
+    } 
+    // create a cellZone named soil from the cellSet soil
+    {
+        name    terrain;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+            set    terrain;
+        }
+    }              
+
+
+);
+
+// ************************************************************************* //

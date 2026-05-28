@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# ---------------------------------------------------------------------
+# After case was decomposed and faceAgglomerate has failed, 
+# this script cleans up the files created by faceAgglomerate, 
+# redristribute the files in the processor directories and reruns it.
+# ---------------------------------------------------------------------
+NP=20
+
+# Clean serial directories\
+echo "Cleaning up previous run files..."
+rm -rf 0/constant/air/skyViewCoeff.gz
+rm -rf 0/constant/air/solarLoadFineFaces.gz
+rm -rf 0/constant/air/constructMap.gz
+rm -rf 0/constant/air/constructMapDim.gz
+rm -rf 0/constant/air/F.gz
+rm -f ./constant/air/finalAgglom.gz
+rm -f ./constant/air/globalFaceFaces.gz
+rm -f ./constant/air/subMap.gz
+rm -f ./constant/air/sunskyMap.gz
+rm -f ./constant/air/sunViewCoeff.gz
+rm -f ./constant/air/sunViewFactors.gz
+rm -f ./0/air/viewFactorField.gz
+rm -f ./0/air/facesAgglomeration.gz
+
+# Clean processor directories
+echo "Cleaning up processor directories..."
+for i in $(seq 0 $((NP-1))); do
+    rm -f processor$i/0/air/skyViewCoeff.gz
+    rm -f processor$i/0/air/solarLoadFineFaces.gz
+    rm -f processor$i/0/air/viewFactorField.gz
+    rm -f processor$i/0/air/facesAgglomeration.gz
+    rm -f processor$i/constant/air/constructMap.gz
+    rm -f processor$i/constant/air/constructMapDim.gz
+    rm -f processor$i/constant/air/F.gz
+    rm -f processor$i/constant/air/finalAgglom.gz
+    rm -f processor$i/constant/air/globalFaceFaces.gz
+    rm -f processor$i/constant/air/subMap.gz
+    rm -f processor$i/constant/air/sunskyMap.gz
+    rm -f processor$i/constant/air/sunViewCoeff.gz
+    rm -f processor$i/constant/air/sunViewFactors.gz
+    echo "  Cleaned processor$i"
+done
+
+echo "Redistributing viewFactorsDict..."
+for i in $(seq 0 $((NP-1))); do cp constant/air/viewFactorsDict processor$i/constant/air/; done
+
+echo "Running faceAgglomerate..."
+mpirun -np $NP faceAgglomerate -region air -parallel > log16.faceAgglomerate 2>&1 && tail -n 20 log16.faceAgglomerate
+
+
+echo "Done."

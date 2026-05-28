@@ -1,0 +1,59 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+NP=32
+
+# -------------------------------d
+# Update decomposeParDict files
+# -------------------------------
+echo "Updating decomposeParDict files..."
+
+updateDict() {
+    dictPath="$1"
+
+    if [ -f "$dictPath" ]; then
+        echo "Updating $dictPath"
+
+        # Update numberOfSubdomains
+        sed -i "s/^numberOfSubdomains.*/numberOfSubdomains $NP;/" "$dictPath"
+
+
+    else
+        echo "Warning: $dictPath not found"
+    fi
+}
+
+# Apply to all regions
+updateDict system/decomposeParDict
+updateDict system/air/decomposeParDict
+updateDict system/terrain/decomposeParDict
+updateDict system/buildings/decomposeParDict
+
+
+# -------------------------------
+# Create air mesh (parallel snappyHexMesh)
+# -------------------------------
+echo "Creating mesh for air region..."
+blockMesh > log1.blockMesh.air 2>&1
+surfaceFeatures > log2.surfaceFeatures.air 2>&1
+
+echo "Decomposing for parallel snappyHexMesh..."
+decomposePar -force > log3.decomposePar_snappy 2>&1
+
+echo "Running snappyHexMesh in parallel..."
+mpirun -np $NP snappyHexMesh -parallel -overwrite > log4.snappyHexMesh.air 2>&1
+
+echo "Reconstructing mesh..."
+reconstructParMesh -constant > log5.reconstructParMesh.air 2>&1
+
+echo "Checking mesh..."
+checkMesh -latestTime  -allTopology > log6.checkMesh.air 2>&1
+
+echo "Cleaning up processor dirs from snappy..."
+rm -rf processor*
+
+
+# ----------------------------------------------------------------- end-of-file

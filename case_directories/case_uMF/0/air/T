@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0/air";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 299.5388889; 
+
+
+boundaryField
+{
+    inlet
+    {
+        type            uniformFixedValue;
+        uniformValue    tableFile;
+        uniformValueCoeffs
+        {
+            file        "$FOAM_CASE/0/air/Tambient";
+        }
+        value           uniform 299.5388889;  
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 299.5388889;
+        value           uniform 299.5388889; 
+    }
+    top
+    {
+        type            slip;
+    }
+    terrain
+    {
+        type    compressible::CFDHAMfluidTemperatureCoupledMixed;
+        value   uniform 303.07;     
+    }
+    vegetation
+    {
+        type    compressible::CFDHAMfluidTemperatureCoupledMixed;
+        value   uniform 303.07;      
+    }
+    side1
+    {
+        type            slip; 
+    }
+    side2
+    {
+        type            slip;
+    }
+    buildings
+    {
+        type    compressible::CFDHAMfluidTemperatureCoupledMixed;
+        value   uniform  304.55;
+    }
+}
+
+
+// ************************************************************************* //

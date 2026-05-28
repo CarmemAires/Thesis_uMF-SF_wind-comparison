@@ -1,0 +1,90 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                               |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     urbanMicroclimateFoam;
+
+startFrom       latestTime;
+
+startTime       46800;
+
+stopAt          endTime;
+
+endTime         50400;
+
+deltaT          3600;
+
+writeControl    timeStep;
+
+writeInterval   1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   12;
+
+runTimeModifiable true;
+
+
+functions
+{
+  #includeFunc residuals
+  #includeFunc probes    
+}
+
+libs (
+	"libatmosphericModels.so"
+	"libUserturbulenceModels.so"
+      );
+
+//urbanMicroclimateFoam controls
+
+initialSolidTimestepFactor    0.001666667;
+
+minDeltaT       1E-10;
+
+maxDeltaT       100;
+
+
+// Adaptive timestepping for the solid Picard loop
+initialSolidTimestepFactor    0.001666667;   
+minDeltaT                     1E-10;         
+maxDeltaT                     100;           
+increase_factor               1.2;           
+decrease_factor               0.5;           
+
+// Picard nonlinear iteration controls
+nInternalIterMax              30;            
+PicardToleranceTs             0.05;          
+PicardTolerancews             0.05;          
+
+
+minFluidIteration    0;
+maxFluidIteration    3500; 
+
+// HAM equation form
+pcEqnForm                     pc-based;      
+minCrel                       1e-37;       
+
+
+// ************************************************************************* //

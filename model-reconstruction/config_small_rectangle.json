@@ -1,0 +1,69 @@
+{
+  "point_clouds" :
+  {
+    "ground": "PC/terrain_32129.laz",		// Point cloud associated with the terrain
+    "buildings" : "PC/buildings_32129.laz"	// Point cloud associated with buildings building_32129.laz
+  },
+  "polygons" : [
+    {
+      "type": "Building",
+      "path": "polygons/footprints_32129.gpkg",	// Building footprint polygons
+      "refine": true
+    
+    }
+
+  ],
+
+  "reconstruction_regions": [
+    {
+      "influence_region":   300,     // Radius, Polygon points, GeoJSON polygon, or null for BPG (best practice guides) // 3938 feet == 1200 m 1900
+     // "lod": "2.2",                   // 1.2, 1.3, or 2.2; base level of detail for reconstruction
+     // "complexity_factor": 0.2,       // Complexity factor of the graph-cut optimisation
+      "lod": "1.2",                   // 1.2, 1.3, or 2.2; base level of detail for reconstruction
+     "complexity_factor": 0.99,       // Complexity factor of the graph-cut optimisation
+    // "lod": "1.3",                   // 1.2, 1.3, or 2.2; base level of detail for reconstruction
+     //"complexity_factor": 0.8,       // Complexity factor of the graph-cut optimisation
+     // "lod13_step_height": 3, // Optional - choose LoD1.3 minimum step height between roof faces in m
+      "check_validity": true          // Optional argument, report geometric validation in log
+    }
+  ],
+
+
+  //-- Domain dimensions
+  "point_of_interest": [414009.007, 125342.985],		// Center of the domain in the same CRS as the polygons and point cloud //
+  "domain_bnd":      [[413686.674, 124489.685], [414817.969, 124969.455], [414163.834, 126512.745], [413032.539, 126032.975]],  // Null when using best practice guides
+  "top_height":       6000,            				      // Doesn't matter if BPG (best practice guides) are used for domain size// 
+
+  //- Arguments required only if using BPG
+  "bnd_type_bpg":    "Rectangle",     			    	// Round, Rectangle, Oval. Matters only if using BPG(best practice guides)
+  "bpg_blockage_ratio": false,        				// Optional argument, blockage ratio BPG. Can be set as 'true' for default, or as a number defining max allowed blockage ratio
+  "flow_direction": [,-0.39 0.92], //157degrees 				// Required for Rectangular and Oval domain, and Round with the blockage ratio
+  "buffer_region":    5, //30,            				// Buffer region size in percentage of distance to bndpoly centroid
+  "reconstruct_boundaries": true,     				// Optional - reconstruct sides and top of the domain, default: false
+ 
+  //-- Reconstruction related
+  "terrain_thinning": 90,             // Optional - percentage of randomly removed terrain points
+  "smooth_terrain": {                 // Optional - smoothing flag
+  "iterations": 5,                  //            number of smoothing iterations. Typical numbers are 1-10
+  "max_pts": 250000 }, 
+  "flat_terrain":     false,          // Optional - make terrain flat
+
+  //- Buildings
+  "building_percentile": 86,		// What percentile of points should be used for building height attribution? higher good for dense point clouds that are classified, for unclassified point clouds needs some tuning 70-90 is a good number
+  "min_height": 3,
+  "min_area": 1,
+  "remove_bottom": true,              // Optional - remove bottom surfaces at the intersection of buildings and terrain
+  
+
+  //-- Polygons related
+  "edge_max_len": 5,
+
+  //-- Output
+  "output_file_name":  "Mesh",
+  "output_format":     "obj", //"obj", "stl", or "cityjson"
+  "output_separately": true,
+
+  //-- Log
+  "output_log": true,       // Optional, also outputs GeoJSON file of building polygons that couldn't be reconstructed
+  "log_file": "logFile.log" // Optional, defaults to 'log'
+}

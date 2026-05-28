@@ -1,0 +1,77 @@
+#!/bin/bash
+
+echo "Exporting problematic mesh sets to VTK..."
+
+# --------------------
+# AIR REGION
+# --------------------
+echo "Processing AIR region..."
+
+for set in edgeFaces lowQualityTetFaces concaveFaces warpedFaces lowWeightFaces lowVolRatioFaces
+do
+    if [ -d "constant/air/polyMesh/sets" ] && grep -q "$set" constant/air/polyMesh/sets/* 2>/dev/null; then
+        echo "Exporting faceSet $set"
+        foamToVTK -region air -faceSet $set
+    fi
+done
+
+for set in concaveCells underdeterminedCells
+do
+    if [ -d "constant/air/polyMesh/sets" ]; then
+        echo "Exporting cellSet $set"
+        foamToVTK -region air -cellSet $set
+    fi
+done
+
+for set in shortEdges
+do
+    if [ -d "constant/air/polyMesh/sets" ]; then
+        echo "Exporting pointSet $set"
+        foamToVTK -region air -pointSet $set
+    fi
+done
+
+
+# --------------------
+# TERRAIN REGION
+# --------------------
+echo "Processing TERRAIN region..."
+
+for set in twoInternalFacesCells highAspectRatioCells underdeterminedCells
+do
+    echo "Exporting cellSet $set"
+    foamToVTK -region terrain -cellSet $set
+done
+
+for set in nonOrthoFaces skewFaces lowWeightFaces lowVolRatioFaces
+do
+    echo "Exporting faceSet $set"
+    foamToVTK -region terrain -faceSet $set
+done
+
+
+# --------------------
+# BUILDINGS REGION
+# --------------------
+echo "Processing BUILDINGS region..."
+
+for set in twoInternalFacesCells highAspectRatioCells underdeterminedCells
+do
+    echo "Exporting cellSet $set"
+    foamToVTK -region buildings -cellSet $set
+done
+
+for set in nonOrthoFaces lowWeightFaces
+do
+    echo "Exporting faceSet $set"
+    foamToVTK -region buildings -faceSet $set
+done
+
+for set in nearPoints
+do
+    echo "Exporting pointSet $set"
+    foamToVTK -region buildings -pointSet $set
+done
+
+
+echo "Done. Open the VTK directory in ParaView."

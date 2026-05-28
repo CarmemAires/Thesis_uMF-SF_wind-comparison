@@ -1,0 +1,134 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM m4 rotated blockMeshDict              |
+|  \\    /   O peration     | Wind-direction driven geometry                 |
+|   \\  /    A nd           |                                                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+// dnl -- Min Domain extents
+// define(xMin, -450) //inletoutlet length
+// define(xMax,  450)
+// define(yMin, -500) //sides lengthx
+// define(yMax,  500)
+// define(zMin,  238)
+// define(zMax,  340)
+
+// //15H5H5H5H
+// dnl -- Domain extents 
+// define(xMin, -1054.99) //inletoutlet length
+// define(xMax,  701.295)
+// define(yMin, -598.825) //sides lengthx
+// define(yMax,  628.252)
+// define(zMin,  241)
+// define(zMax,  581)
+
+ //inletoutlet length
+
+ //sides lengthx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+convertToMeters 1;
+
+vertices
+(
+    (-322.333 -853.101 241)
+    (808.962 -373.53 241)
+    (154.827 1169.56 241)
+    (-976.468 689.987 241)
+    (-322.333 -853.101 796)
+    (808.962 -373.53 796)
+    (154.827 1169.56 796)
+    (-976.468 689.987 796)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7)
+    (122 168 56)
+    simpleGrading (1 1 1)
+);
+
+edges ();
+
+boundary
+(
+    side2
+    {
+        type patch;
+        faces ((0 4 7 3));
+    }
+    side1
+    {
+        type patch;
+        faces ((1 2 6 5));
+    }
+    outlet
+    {
+        type patch;
+        faces 
+        (
+            (2 3 7 6)
+        );
+    }
+    inlet
+    {
+        type patch;
+        faces 
+        (
+            (0 1 5 4)
+        );
+    }
+    terrain
+    {
+        type wall;
+        faces ((0 3 2 1));
+    }
+    top
+    {
+        type patch;
+        faces ((4 5 6 7));
+    }
+);
+
+mergePatchPairs ();
+
+// ************************************************************************* //

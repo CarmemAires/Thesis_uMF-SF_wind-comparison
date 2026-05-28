@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0/air";
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "include/ABLConditions"
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField    uniform $pressure; 
+
+boundaryField
+{
+    inlet
+    {
+        type            freestreamPressure;
+        freestreamValue uniform $pressure;
+        supersonic      0;
+        value           uniform $pressure;
+    }
+    outlet
+    {
+        type            freestreamPressure;
+        freestreamValue uniform $pressure;
+        supersonic      0;
+        value           uniform $pressure;
+    }
+    top
+    {
+        type            freestreamPressure;
+        freestreamValue uniform $pressure;
+        supersonic      0;
+        value           uniform $pressure;
+    }
+    terrain
+    {
+        type            zeroGradient;
+    }
+    vegetation
+    {
+        type            zeroGradient;
+    }
+    side1
+    {
+        type            freestreamPressure;
+        freestreamValue uniform $pressure;
+        supersonic      0;
+        value           uniform $pressure;
+    }
+    side2
+    {
+        type            freestreamPressure;
+        freestreamValue uniform $pressure;
+        supersonic      0;
+        value           uniform $pressure;
+    }
+    buildings
+    {
+        type            zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //

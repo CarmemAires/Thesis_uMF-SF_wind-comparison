@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      viewFactorsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Write agglomeration as a volScalarField with calculated boundary values
+writeFacesAgglomeration   true;
+writeViewFactorMatrix   true;
+
+//Debug option
+debug                     1;
+
+//Dump connectivity rays
+dumpRays                  false;
+
+maxDynListLength 10000000;
+
+skyPosVector    (0 0 1);
+
+// Per patch (wildcard possible) the coarsening level
+side1
+{
+    nFacesInCoarsestLevel     200;
+    featureAngle              10;
+}
+side2
+{
+    nFacesInCoarsestLevel     200;
+    featureAngle              10;
+}
+inlet
+{
+    nFacesInCoarsestLevel     10;
+    featureAngle              10;
+}
+outlet
+{
+    nFacesInCoarsestLevel     10;
+    featureAngle              10;
+}
+top
+{
+    nFacesInCoarsestLevel     500;
+    featureAngle              10;
+}
+
+
+terrain
+{
+    nFacesInCoarsestLevel    4000;
+    featureAngle             120;
+}
+
+buildings
+{
+    nFacesInCoarsestLevel    2000;
+    featureAngle              90;
+}
+// ************************************************************************* //

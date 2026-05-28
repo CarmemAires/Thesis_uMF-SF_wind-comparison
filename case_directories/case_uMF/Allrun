@@ -1,0 +1,143 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+NP=20
+time=46800
+
+# -------------------------------
+# Update decomposeParDict files
+# -------------------------------
+echo "Updating decomposeParDict files..."
+
+updateDict() {
+    dictPath="$1"
+
+    if [ -f "$dictPath" ]; then
+        echo "Updating $dictPath"
+
+        # Update numberOfSubdomains
+        sed -i "s/^numberOfSubdomains.*/numberOfSubdomains $NP;/" "$dictPath"
+
+    else
+        echo "Warning: $dictPath not found"
+    fi
+}
+
+# Apply to all regions
+updateDict system/decomposeParDict
+updateDict system/air/decomposeParDict
+updateDict system/terrain/decomposeParDict
+updateDict system/buildings/decomposeParDict
+
+# # # -------------------------------
+# # # Clean up
+# # # -------------------------------
+
+echo "Cleaning up previous run files..."
+rm -rf $time/buildings
+rm -rf $time/terrain
+rm -rf $time/air
+
+
+cp -r $time/buildings_bak $time/buildings
+cp -r $time/terrain_bak $time/terrain
+cp -r $time/air_bak $time/air
+
+rm -f log19.urbanMicroclimateFoam
+rm -f log20.reconstructPar_air
+rm -f log20.reconstructPar_terrain
+rm -f log20.reconstructPar_buildings
+
+rm -rf dynamicCode
+rm -rf postProcessing
+
+# # -------------------------------
+
+rm -f log16.faceAgglomerate
+rm -f log17.viewFactorsGen  
+rm -f log18.solarRayTracingGen
+rm -f log13.decomposePar_air
+rm -f log14.decomposePar_buildings
+rm -f log15.decomposePar_terrain
+
+rm -rf processor*
+
+# # -------------------------------
+# # Decompose before view factor generation
+# # -------------------------------
+echo "Decomposing air region..."
+decomposePar -region air > log13.decomposePar_air 2>&1
+
+echo "Decomposing buildings region..."
+decomposePar -region buildings > log14.decomposePar_buildings 2>&1
+
+echo "Decomposing terrain region..."
+decomposePar -region terrain > log15.decomposePar_terrain 2>&1
+
+# # Copy non-radiation constant files to processor dirs
+echo "Distributing non-radiation constant files..."
+for i in $(seq 0 $((NP-1))); do
+    mkdir -p processor$i/constant/air
+    mkdir -p processor$i/constant/buildings
+    mkdir -p processor$i/constant/terrain
+
+    cp constant/air/g                        processor$i/constant/air/
+    cp constant/air/radiationProperties      processor$i/constant/air/
+    cp constant/air/solarLoadProperties      processor$i/constant/air/
+    cp constant/air/thermophysicalProperties processor$i/constant/air/
+    cp constant/air/turbulenceProperties     processor$i/constant/air/
+    cp constant/air/viewFactorsDict          processor$i/constant/air/
+
+    find constant/buildings -maxdepth 1 -type f -exec cp {} processor$i/constant/buildings/ \;
+    for dir in constant/buildings/*/; do
+        dirname=$(basename "$dir")
+        if [ "$dirname" != "polyMesh" ]; then
+            cp -r "$dir" processor$i/constant/buildings/
+        fi
+    done
+    find constant/terrain -maxdepth 1 -type f -exec cp {} processor$i/constant/terrain/ \;
+    for dir in constant/terrain/*/; do
+        dirname=$(basename "$dir")
+        if [ "$dirname" != "polyMesh" ]; then
+            cp -r "$dir" processor$i/constant/terrain/
+        fi
+    done
+
+done
+
+
+# -------------------------------
+# Generate view factors IN PARALLEL
+# (on the decomposed mesh)
+# -------------------------------
+echo "Generating face agglomeration in parallel..."
+mpirun -np $NP faceAgglomerate -region air -parallel > log16.faceAgglomerate 2>&1
+
+echo "Generating view factors in parallel..."
+mpirun -np $NP viewFactorsGen -region air -parallel > log17.viewFactorsGen 2>&1
+
+echo "Generating solar ray tracing in parallel..."
+mpirun -np $NP solarRayTracingGen -region air -parallel > log18.solarRayTracingGen 2>&1
+
+echo "View factors done."
+
+# -------------------------------
+# Run in parallel
+# -------------------------------
+echo "Running urbanMicroclimateFoam in parallel on $NP cores..."
+mpirun -np $NP urbanMicroclimateFoam -parallel > log19.urbanMicroclimateFoam 2>&1
+echo "Solver done."
+
+# -------------------------------
+# Reconstruct ALL regions
+# -------------------------------
+echo "Reconstructing..."
+reconstructPar -region air       > log20.reconstructPar_air       2>&1
+reconstructPar -region buildings > log20.reconstructPar_buildings 2>&1
+reconstructPar -region terrain   > log20.reconstructPar_terrain   2>&1
+
+echo "All done. Check log.urbanMicroclimateFoam"

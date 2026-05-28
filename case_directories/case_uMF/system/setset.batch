@@ -1,0 +1,2 @@
+cellSet terrain new boxToCell (-2582 -2582 230) (2582 2582 340)
+cellZoneSet terrain new setToCellZone terrain
