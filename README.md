@@ -17,7 +17,7 @@ repository/
 ```
 ## Links
 
-- [**TU Delft repository**]()
+- [**TU Delft repository**](https://repository.tudelft.nl/record/uuid:d18b9ec9-a296-47c3-a2d0-92969777369e)
 - [**Input data (4TU repository)**]()
   
 ## Requirements
@@ -81,3 +81,9 @@ model-reconstruction/
 └── PC/          # Point clouds
 ```
 
+### Reference
+
+To cite please use:
+
+Aires, C. (2026). A Comparison of Wind Velocity Predictions from Wind-Only and Thermally Coupled OpenFOAM Solvers in Urban Models with Complex Terrain. MSc Thesis, Delft University of Technology, Faculty of Architecture and the Built Environment.
+DOI: 10.4121/fbdbda4e-e4e5-46eb-9521-505b6a15889f

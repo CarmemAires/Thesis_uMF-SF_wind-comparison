@@ -1,13 +1,13 @@
 {
   "point_clouds" :
   {
-    "ground": "PC/terrain_32129.laz",		// Point cloud associated with the terrain
-    "buildings" : "PC/buildings_32129.laz"	// Point cloud associated with buildings building_32129.laz
+    "ground": "PC/terrain_EPSG32129.laz",		// Point cloud associated with the terrain
+    "buildings" : "PC/buildings_EPSG32129.laz"	// Point cloud associated with buildings building_32129.laz
   },
   "polygons" : [
     {
       "type": "Building",
-      "path": "polygons/footprints_32129.gpkg",	// Building footprint polygons
+      "path": "polygons/footprints_EPSG32129.gpkg",	// Building footprint polygons
       "refine": true
     
     }
