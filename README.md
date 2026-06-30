@@ -9,7 +9,7 @@ This repository belongs to the master thesis [**"Comparison of Wind Velocity Pre
 
 
 
-## Repository Structure
+## Repository structure
 
 This repository contains two case directories and a model-reconstruction directory:
 
@@ -56,7 +56,7 @@ casedir/
 ./Allrun
 ```
 
-### Additional Utilities for debugging/rerunning urbanMicroclimateFoam utilities
+### Additional utilities for debugging/re-running urbanMicroclimateFoam
 
 The following utilities are included for use with `urbanMicroclimateFoam`:
 
@@ -70,7 +70,7 @@ Exports mesh errors to VTK format.
 Removes files created by a previous `faceAgglomerate` run, redistributes the new `viewFactorsDict`, and reruns `faceAgglomerate`. Useful when `faceAgglomerate` or `viewFactorsGen` crashes.
 
 
-### Model Reconstruction using City4CFD
+### Model reconstruction using City4CFD
 
 The 3D models are provided directly, but if you wish to reconstruct them yourself, the `model-reconstruction/` folder contains the configuration file for [City4CFD](https://github.com/tudelft3d/city4cfd). Please note that several manual pre-processing steps were followed after the reconstruction using City4CFD, see the [thesis report](https://repository.tudelft.nl/record/uuid:d18b9ec9-a296-47c3-a2d0-92969777369e), therefore you will probably encounter errors with urbanMicroclimateFoam.
 
@@ -85,16 +85,16 @@ model-reconstruction/
 ```
 **2. Run reconstruction**
 
-Create a `results` folder in the `model-reconstruction/` directory. Then run from that directory:
+Create a `results/` folder in the `model-reconstruction/` directory. Then run from that directory:
 
 ```bash
 your-City4CFD-folder/build/city4cfd config_small_rectangle.json --output_dir results
 ```
 
 
-## How to reference this work
+## How to cite this work
 
-To cite please use:
+To cite this work please use:
 
 Aires, C. (2026). A Comparison of Wind Velocity Predictions from Wind-Only and Thermally Coupled OpenFOAM Solvers in Urban Models with Complex Terrain. MSc Thesis, Delft University of Technology, Faculty of Architecture and the Built Environment.
 
