@@ -2,38 +2,41 @@
 
 **Author:** Carmem Aires (MSc Geomatics - 3D Geoinformation Group — TU Delft)
 
-This repository belongs to the master thesis "Comparison of Wind Velocity Predictions from Wind-Only and Thermally Coupled OpenFOAM Solvers in Urban Models with Complex Terrain" presented at the 3D Geoinformation Group of the Delft University of Technology - Faculty of Architecture and the Built Environment.
+This repository belongs to the master thesis [**"Comparison of Wind Velocity Predictions from Wind-Only and Thermally Coupled OpenFOAM Solvers in Urban Models with Complex Terrain"**](https://repository.tudelft.nl/record/uuid:d18b9ec9-a296-47c3-a2d0-92969777369e) presented at the 3D Geoinformation Group of the Delft University of Technology - Faculty of Architecture and the Built Environment.
+
+
+![Alt text](images/UMF_cover_zoom.png)
+
+
 
 ## Repository Structure
 
-This repository contains two case directories:
+This repository contains two case directories and a model-reconstruction directory:
 
 ```
 repository/
     ├── case_directories/
-    |    ├── case_sF/    # simpleFoam case setup
-    |    └── case_uMF/   # urbanMicroclimateFoam case setup
-    └── model-reconstruction/
+    |    ├── case_sF/           # simpleFoam case setup
+    |    └── case_uMF/          # urbanMicroclimateFoam case setup
+    └── model-reconstruction/   # City4CFD reconstruction setup
 ```
-## Links
 
-- [**Thesis and Presentation (TU Delft repository)**](https://repository.tudelft.nl/record/uuid:d18b9ec9-a296-47c3-a2d0-92969777369e)
-- [**Input data (4TU.ReserchData repository)**](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f)
-  
 ## Requirements
 
-To run the cases you will need (the cases were tested in these software versions):
+To run the cases you will need the following software (the cases were tested in these software versions and using linux):
 
 - [OpenFOAM v7](https://openfoam.org/)
 - [urbanMicroclimateFoam](https://github.com/OpenFOAM-BuildingPhysics/urbanMicroclimateFoam)
 - [City4CFD](https://github.com/tudelft3d/city4cfd)
 
 
-## Running a Case
+## Running cases and reconstruction
+
+### Running simpleFoam and urbanMicroclimateFoam Cases
 
 **1. Add input data**
 
-Download the .obj files from [here](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f) and add it the respective triSurface directory
+Download the .obj files from the [4TU.ResearchData](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f) repository and add it to the respective triSurface directory
 ```
 casedir/
 ├── 0/   
@@ -53,7 +56,7 @@ casedir/
 ./Allrun
 ```
 
-## Additional Utilities (urbanMicroclimateFoam)
+### Additional Utilities for debugging/rerunning urbanMicroclimateFoam utilities
 
 The following utilities are included for use with `urbanMicroclimateFoam`:
 
@@ -67,21 +70,29 @@ Exports mesh errors to VTK format.
 Removes files created by a previous `faceAgglomerate` run, redistributes the new `viewFactorsDict`, and reruns `faceAgglomerate`. Useful when `faceAgglomerate` or `viewFactorsGen` crashes.
 
 
-## Model Reconstruction 
+### Model Reconstruction using City4CFD
 
-The 3D models are provided directly, but if you wish to reconstruct them yourself, the `model-reconstruction/` folder contains the configuration file for [City4CFD](https://github.com/tudelft3d/city4cfd).
+The 3D models are provided directly, but if you wish to reconstruct them yourself, the `model-reconstruction/` folder contains the configuration file for [City4CFD](https://github.com/tudelft3d/city4cfd). Please note that several manual pre-processing steps were followed after the reconstruction using City4CFD, see the [thesis report](https://repository.tudelft.nl/record/uuid:d18b9ec9-a296-47c3-a2d0-92969777369e), therefore you will probably encounter errors with urbanMicroclimateFoam.
 
-### Input Data
+**1. Add input data**
 
-Before running, download the polygons and point clouds from [here](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f) and place it in the following structure:
+Download the polygons and point clouds from the [4TU.ResearchData](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f) repository and place it in the following structure:
 
 ```
 model-reconstruction/
 ├── polygons/    # Building and Vegetation footprints
 └── PC/          # Point clouds
 ```
+**2. Run reconstruction**
 
-### Reference
+Create a `results` folder in the `model-reconstruction/` directory. Then run from that directory:
+
+```bash
+your-City4CFD-folder/build/city4cfd config_small_rectangle.json --output_dir results
+```
+
+
+## How to reference this work
 
 To cite please use:
 
