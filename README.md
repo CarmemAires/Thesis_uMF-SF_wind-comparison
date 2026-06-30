@@ -18,7 +18,7 @@ repository/
 ## Links
 
 - [**TU Delft repository**](https://repository.tudelft.nl/record/uuid:d18b9ec9-a296-47c3-a2d0-92969777369e)
-- [**Input data (4TU repository)**](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f)
+- [**Input data (4TU.ReserchData repository)**](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f)
   
 ## Requirements
 
@@ -73,7 +73,7 @@ The 3D models are provided directly, but if you wish to reconstruct them yoursel
 
 ### Input Data
 
-Before running, download the required data from [4TU](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f) and place it in the following structure:
+Before running, download the polygons and point clouds from [here](https://data.4tu.nl/datasets/fbdbda4e-e4e5-46eb-9521-505b6a15889f) and place it in the following structure:
 
 ```
 model-reconstruction/
